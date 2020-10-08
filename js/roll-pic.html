@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script>
+        function startMove(obj, json, fnEnd) {
+            clearInterval(obj.timer)
+            obj.timer = setInterval(() => {
+                let bStop = true
+                for (let attr in json) {
+                    let cur = 0
+                    if (attr == 'opacity')
+                        cur = Math.round(parseFloat(getComputedStyle(obj, false)[attr]) * 100)
+                    else
+                        cur = parseInt(getComputedStyle(obj, false)[attr])
+
+                    let speed = (json[attr] - cur) / 6
+                    speed = speed > 0 ? Math.ceil(speed) : Math.floor(speed)
+
+                    if (json[attr] != cur)
+                        bStop = false
+
+                    if (attr == 'opacity')
+                        obj.style[attr] = (cur + speed) / 100
+                    else
+                        obj.style[attr] = cur + speed + 'px'
+                }
+
+                if (bStop) {
+                    clearInterval(obj.timer)
+                    if (fnEnd)
+                        fnEnd()
+                }
+            }, 30)
+        }
+        window.onload = function () {
+            new rollPic('#wrap')
+
+        }
+
+        class rollPic {
+            oWrap
+            oList
+            oImgWidth
+            oImgNum
+            oLeftBtn
+            oRightBtn
+            now
+            constructor(wrap) {
+                this.oWrap = typeof wrap == 'string' ? document.querySelector(wrap) : wrap
+                this._init()
+            }
+            _init() {
+                this.oList = this.oWrap.querySelector('ul')
+                let aImg = this.oList.querySelectorAll('li')
+                this.oImgNum = aImg.length
+                this.oImgWidth = aImg[0].offsetWidth
+                this.oList.style.width = this.oImgWidth * this.oImgNum * 2 + 'px'
+                this.oList.innerHTML += this.oList.innerHTML
+                this.oLeftBtn = this.oWrap.querySelectorAll('.btn')[0]
+                this.oRightBtn = this.oWrap.querySelectorAll('.btn')[1]
+                this.now = 0
+                this._arrowClick()
+            }
+            _arrowClick() {
+                let lClick=()=>{
+                    if (this.now == 0) {
+                        this.now = this.oImgNum
+                        this.oList.style.left = -this.oImgWidth * this.now + 'px'                       
+                    }
+                    this.now--
+                    tab()
+                }
+                let rClick=()=>{
+                    if (this.now == this.oImgNum) {
+                        this.now = 0
+                        this.oList.style.left = -this.oImgWidth * this.now + 'px'                       
+                    }
+                    this.now++
+                    tab()
+                }
+
+                let tab=()=>{
+                    startMove(this.oList, { left: -this.now * this.oImgWidth })
+                }
+                this.oLeftBtn.addEventListener('click', lClick, false)
+                this.oRightBtn.addEventListener('click',rClick, false)
+               
+                
+            }
+
+        }
+    </script>
+</head>
+
+<body>
+    <section id='wrap'>
+        <ul class="clearfix">
+            <li style="background:red;">0</li>
+            <li style="background:orange;">1</li>
+            <li style="background:yellow;">2</li>
+            <li style="background:#ccc;">3</li>
+            <li style="background:blue;">4</li>
+        </ul>
+        <div class="btn"></div>
+        <div class="btn"></div>
+    </section>
+</body>
+<style>
+    * {
+        padding: 0;
+        margin: 0;
+    }
+
+    ul {
+        list-style: none
+    }
+
+    .clearfix:after {
+        content: '';
+        clear: both;
+        display: block;
+    }
+
+    #wrap {
+        width: 200px;
+        height: 100px;
+        margin: 100px auto 0;
+        position: relative;
+        overflow: hidden
+    }
+
+    #wrap ul {
+        position: absolute;
+        width: 1000px;
+        height: 100px;
+    }
+
+    #wrap ul li {
+        width: 200px;
+        height: 100px;
+        float: left;
+    }
+
+    #wrap .btn {
+        width: 20px;
+        height: 20px;
+        position: absolute;
+        top: 40px;
+        background: white
+    }
+
+    #wrap .btn:nth-of-type(1) {
+        left: 20px;
+    }
+
+    #wrap .btn:nth-of-type(2) {
+        right: 20px;
+    }
+</style>
+
+</html>
