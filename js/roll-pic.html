@@ -45,6 +45,8 @@
 
             function mouseWheel(){
                 clearInterval(obj.timer)
+                document.removeEventListener('mousewheel',mouseWheel,false)
+
             }
         }
 

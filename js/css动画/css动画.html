@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    * {
+        margin: 0;
+        padding: 0
+    }
+
+    div {
+        margin: 50px 0 0 50px
+    }
+
+    .demo-1 {
+        width: 100px;
+        height: 100px;
+        background: red;
+        transition: width 1s ease
+    }
+
+    .demo-1:hover {
+        width: 300px;
+    }
+
+    .demo-2 {
+        width: 100px;
+        height: 100px;
+        background: blue;
+    }
+
+    .demo-2:hover {
+        transition: transform 1s ease;
+        transform: rotate(45deg)
+    }
+
+    .demo-3 {
+        width: 100px;
+        height: 100px;
+        background: #ccc;
+        transition: transform 1s ease;
+        transform-origin: center;
+    }
+
+    .demo-3:hover {
+        transform: scale(0) rotate(1800deg);
+    }
+
+
+    .demo-4 {
+        border-radius: 50%;
+        width: 100px;
+        height: 100px;
+        background: #ccc;
+        animation: jump 1s ease-in infinite alternate;
+    }
+
+    @keyframes jump {
+        0% {
+            transform: translateY(0)
+        }
+
+        90% {
+            transform: translateY(200px);
+            clip-path: ellipse(50% 50% at 50% 50%)
+        }
+
+        100% {
+            transform: translateY(210px);
+            clip-path: ellipse(50% 40% at 50% 48%)
+        }
+
+    }
+
+    .demo-5 {
+        margin-top: 200px;
+        width: 150px;
+        height: 150px;
+        position: relative;
+        animation:round 1s steps(12) infinite;
+    }
+
+    .demo-5 span {
+        width: 48px;
+        height: 2px;
+        background: blue;
+        position: absolute;
+        left: 0;
+        top: 74px;
+        transform-origin: 75px 0;
+        border-radius: 24px/1px;
+    }
+
+    .demo-5 span:nth-of-type(1) {
+        transform: rotate(-360deg)
+    }
+
+    .demo-5 span:nth-of-type(2) {
+        transform: rotate(-30deg);
+        opacity: 0.917
+    }
+
+    .demo-5 span:nth-of-type(3) {
+        transform: rotate(-60deg);
+        opacity: 0.834
+    }
+
+    .demo-5 span:nth-of-type(4) {
+        transform: rotate(-90deg);
+        opacity: 0.751
+    }
+
+    .demo-5 span:nth-of-type(5) {
+        transform: rotate(-120deg);
+        opacity: 0.65
+    }
+
+    .demo-5 span:nth-of-type(6) {
+        transform: rotate(-150deg);
+        opacity: 0.55
+    }
+
+    .demo-5 span:nth-of-type(7) {
+        transform: rotate(-180deg);
+        opacity: 0.44
+    }
+
+    .demo-5 span:nth-of-type(8) {
+        transform: rotate(-210deg);
+        opacity: 0.37
+    }
+
+    .demo-5 span:nth-of-type(9) {
+        transform: rotate(-240deg);
+        opacity: 0.3
+    }
+
+    .demo-5 span:nth-of-type(10) {
+        transform: rotate(-270deg);
+        opacity: 0.23
+    }
+
+    .demo-5 span:nth-of-type(11) {
+        transform: rotate(-300deg);
+        opacity: 0.15
+    }
+
+    .demo-5 span:nth-of-type(12) {
+        transform: rotate(-330deg);
+        opacity: 0.1
+    }
+
+    @keyframes round {
+        100% {
+            transform: rotate(360deg)
+        }
+    }
+</style>
+
+<body>
+    <div class="demo-1">
+
+    </div>
+
+    <div class="demo-2"></div>
+
+    <div class="demo-3"></div>
+
+    <div class="demo-4"></div>
+
+    <div class="demo-5">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+</body>
+
+</html>
