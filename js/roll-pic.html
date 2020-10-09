@@ -14,6 +14,10 @@
                     let cur = 0
                     if (attr == 'opacity')
                         cur = Math.round(parseFloat(getComputedStyle(obj, false)[attr]) * 100)
+                        else if(attr=='scrollTop'){
+                            cur=document.documentElement.scrollTop
+                            document.addEventListener('mousewheel',mouseWheel,false)
+                        }
                     else
                         cur = parseInt(getComputedStyle(obj, false)[attr])
 
@@ -25,6 +29,9 @@
 
                     if (attr == 'opacity')
                         obj.style[attr] = (cur + speed) / 100
+                    else if(attr=='scrollTop'){
+                        document.documentElement.scrollTop=cur+speed
+                    }
                     else
                         obj.style[attr] = cur + speed + 'px'
                 }
@@ -35,11 +42,12 @@
                         fnEnd()
                 }
             }, 30)
-        }
-        window.onload = function () {
-            new rollPic('#wrap')
 
+            function mouseWheel(){
+                clearInterval(obj.timer)
+            }
         }
+
 
         class rollPic {
             oWrap
@@ -63,40 +71,49 @@
                 this.oLeftBtn = this.oWrap.querySelectorAll('.btn')[0]
                 this.oRightBtn = this.oWrap.querySelectorAll('.btn')[1]
                 this.now = 0
+                this.lClick=this.lClick.bind(this)
+                this.rClick=this.rClick.bind(this)
                 this._arrowClick()
             }
             _arrowClick() {
-                let lClick=()=>{
-                    if (this.now == 0) {
-                        this.now = this.oImgNum
-                        this.oList.style.left = -this.oImgWidth * this.now + 'px'                       
-                    }
-                    this.now--
-                    tab()
-                }
-                let rClick=()=>{
-                    if (this.now == this.oImgNum) {
-                        this.now = 0
-                        this.oList.style.left = -this.oImgWidth * this.now + 'px'                       
-                    }
-                    this.now++
-                    tab()
-                }
+                this.oLeftBtn.addEventListener('click', this.lClick, false)
+                this.oRightBtn.addEventListener('click', this.rClick, false)
 
-                let tab=()=>{
-                    startMove(this.oList, { left: -this.now * this.oImgWidth })
-                }
-                this.oLeftBtn.addEventListener('click', lClick, false)
-                this.oRightBtn.addEventListener('click',rClick, false)
-               
-                
             }
+            lClick() {
+                if (this.now == 0) {
+                    this.now = this.oImgNum
+                    this.oList.style.left = -this.oImgWidth * this.now + 'px'
+                }
+                this.now--
+                this.tab()
+            }
+            rClick() {
+                if (this.now == this.oImgNum) {
+                    this.now = 0
+                    this.oList.style.left = -this.oImgWidth * this.now + 'px'
+                }
+                this.now++
+                this.tab()
+            }
+
+            tab() {
+                startMove(this.oList, { left: -this.now * this.oImgWidth })
+            }
+
+        }
+
+        window.onload = function () {
+            new rollPic('#wrap');
+            let oDiv1=document.querySelector('#div1')
+            startMove(oDiv1,{left:500,top:1600,scrollTop:1500,opacity:50})
 
         }
     </script>
 </head>
 
-<body>
+<body style="width:100%;height:3000px;">
+    <div id='div1' style=width:100px;height:100px;background:red;position:absolute;left:100px;top:100px;></div>
     <section id='wrap'>
         <ul class="clearfix">
             <li style="background:red;">0</li>
