@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id="div1" style="width:100px;height:100px;background:red;position:absolute;"></div>
+</body>
+
+<script>
+    window.onload=function(){
+        let oDiv=document.querySelector('#div1')
+        new Drag('#div1')
+    }
+
+    class Drag{
+        obj
+        objX
+        objY
+        offsetX
+        offsetY
+        constructor(obj){
+            this.obj=typeof obj=='string'?document.querySelector(obj):obj
+            this.init()
+
+        }
+        init(){
+            this.objX=this.obj.offsetLeft
+            this.objY=this.obj.offsetTop
+            this.mouseDown=this.mouseDown.bind(this)
+            this.mouseMove=this.mouseMove.bind(this)
+            this.mouseUp=this.mouseUp.bind(this)
+            this.bindType()
+        }
+        bindType(){
+            this.obj.addEventListener('mousedown',this.mouseDown,false)
+        }
+        mouseDown(ev){
+            this.offsetX=ev.pageX-this.objX
+            this.offsetY=ev.pageY-this.objY
+            document.addEventListener('mousemove',this.mouseMove,false)
+            document.addEventListener('mouseup',this.mouseUp,false)
+        }
+        mouseMove(ev){
+            this.obj.style.left=ev.pageX-this.offsetX+'px'
+            this.obj.style.top=ev.pageY-this.offsetY+'px'
+        }
+        mouseUp(){
+            this.objX=this.obj.offsetLeft
+            this.objY=this.obj.offsetTop
+            this.destory()
+        }
+        destory(){
+            document.removeEventListener('mousemove',this.mouseMove,false)
+            document.removeEventListener('mouseup',this.mouseUp,false)
+        }
+    }
+
+</script>
+</html>
