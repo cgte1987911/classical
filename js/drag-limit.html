@@ -1,62 +1,102 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 </head>
+
 <body>
+    <div id="div2" style="width:100px;height:100px;background:blue;position:absolute;left:200px"></div>
     <div id="div1" style="width:100px;height:100px;background:red;position:absolute;"></div>
 </body>
 
 <script>
-    window.onload=function(){
-        let oDiv=document.querySelector('#div1')
-        new Drag('#div1')
+    window.onload = function () {
+        let oDiv = document.querySelector('#div1')
+        let oDiv2 = document.querySelector('#div2')
+        new Drag('#div1').init()
+        new DragLimit(oDiv2).initLimit()
     }
 
-    class Drag{
+    class Drag {
         obj
         objX
         objY
         offsetX
         offsetY
-        constructor(obj){
-            this.obj=typeof obj=='string'?document.querySelector(obj):obj
-            this.init()
-
+        constructor(obj) {
+            this.obj = typeof obj == 'string' ? document.querySelector(obj) : obj
         }
-        init(){
-            this.objX=this.obj.offsetLeft
-            this.objY=this.obj.offsetTop
-            this.mouseDown=this.mouseDown.bind(this)
-            this.mouseMove=this.mouseMove.bind(this)
-            this.mouseUp=this.mouseUp.bind(this)
+        init() {
+            this.objX = this.obj.offsetLeft
+            this.objY = this.obj.offsetTop
+            this.mouseDown = this.mouseDown.bind(this)
+            this.mouseMove = this.mouseMove.bind(this)
+            this.mouseUp = this.mouseUp.bind(this)
             this.bindType()
         }
-        bindType(){
-            this.obj.addEventListener('mousedown',this.mouseDown,false)
+        bindType() {
+            this.obj.addEventListener('mousedown', this.mouseDown, false)
         }
-        mouseDown(ev){
-            this.offsetX=ev.pageX-this.objX
-            this.offsetY=ev.pageY-this.objY
-            document.addEventListener('mousemove',this.mouseMove,false)
-            document.addEventListener('mouseup',this.mouseUp,false)
+        mouseDown(ev) {
+            this.offsetX = ev.pageX - this.objX
+            this.offsetY = ev.pageY - this.objY
+            document.addEventListener('mousemove', this.mouseMove, false)
+            document.addEventListener('mouseup', this.mouseUp, false)
+            return ev.preventDefault()
         }
-        mouseMove(ev){
-            this.obj.style.left=ev.pageX-this.offsetX+'px'
-            this.obj.style.top=ev.pageY-this.offsetY+'px'
+        mouseMove(ev) {
+            this.obj.style.left = ev.pageX - this.offsetX + 'px'
+            this.obj.style.top = ev.pageY - this.offsetY + 'px'
         }
-        mouseUp(){
-            this.objX=this.obj.offsetLeft
-            this.objY=this.obj.offsetTop
+        mouseUp() {
+            this.objX = this.obj.offsetLeft
+            this.objY = this.obj.offsetTop
             this.destory()
         }
-        destory(){
-            document.removeEventListener('mousemove',this.mouseMove,false)
-            document.removeEventListener('mouseup',this.mouseUp,false)
+        destory() {
+            document.removeEventListener('mousemove', this.mouseMove, false)
+            document.removeEventListener('mouseup', this.mouseUp, false)
+        }
+    }
+
+    class DragLimit extends Drag {
+        border
+        constructor(obj) {
+            super(obj)
+        }
+        initLimit() {
+            this.init()
+            this.border = {
+                min: {
+                    x: 0,
+                    y: 0
+                },
+                max: {
+                    x: document.documentElement.clientWidth-this.obj.offsetWidth ,
+                    y: document.documentElement.clientHeight-this.obj.offsetHeight
+                }
+            }
+        }
+        mouseMove(ev) {
+            this.objX=ev.clientX  - this.offsetX
+            this.objY=ev.clientY - this.offsetY
+            if (this.objX < this.border.min.x)
+                this.objX = this.border.min.x
+            else if(this.objX>this.border.max.x)
+                this.objX=this.border.max.x
+            if (this.objY < this.border.min.y)
+                this.objY = this.border.min.y
+            else if(this.objY>this.border.max.y)
+                this.objY=this.border.max.y
+                
+            this.obj.style.left = this.objX+'px'
+            this.obj.style.top = this.objY+'px'
         }
     }
 
 </script>
+
 </html>
