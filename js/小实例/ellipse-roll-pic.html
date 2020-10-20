@@ -1,0 +1,71 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>test</title>
+<style type="text/css">
+body{text-align:center;padding:0;margin:0;}
+*{padding:0;margin:0;}
+#box{background:black;width:1000px;height:500px;position:relative;margin:0 auto;top:80px;}
+#box a{display:block;position:absolute;width:220px;height:176px;}
+#flo1{width:500px;height:100%;position:absolute;left:0;top:0;z-index:1;}
+#flo2{width:500px;height:100%;position:absolute;right:0;top:0;z-index:1;}
+</style>
+</head>
+
+<body>
+
+<div id="box">
+<a href="#" style="background:#ccc" title="pic1"></a>
+<a href="#" style="background:rgba(151, 204, 65, 0.63)" title="pic2"></a>
+<a href="#" style="background:pink" title="pic3"></a>
+<a href="#" style="background:yellow" title="pic4"></a>
+<a href="#" style="background:red" title="pic5"></a>
+<a href="#" style="background:brown" title="pic6"></a>
+<a href="#" style="background:blue" title="pic7"></a>
+<a href="#" style="background:purple" title="pic8"></a>
+<a href="#" style="background:rgb(99, 177, 116)" title="pic9"></a>
+<a href="#" style="background:rgb(44, 123, 143)" title="pic10"></a>
+<div id="flo1"></div>
+<div id="flo2"></div>
+</div>
+<script type="text/javascript">
+ var r=360;//定义运动半径
+ var a=0;//每张图片的初始化定位
+ var b=0;//速度变化量
+ var l=415;//图片组的水平位置（图片组已脱离外容器）
+ var t=165;//图片组的垂直位置（图片组已脱离外容器）
+ var z=100;//层级值
+ var w=170;//图片的初始宽度
+ var h=126;//图片的初始高度
+ var speed=0.05;//运动的速度值
+ function $(id){return document.getElementById(id);}//获取id
+ function $tag(id,tag){return id.getElementsByTagName(tag);}//某个id下通过标签获取元素
+ var obox=$("box");//容器
+ var pics=$tag(obox,"a");//所有链接下的图片
+ var flo1=$("flo1");//左浮动层，控制运动速度方向
+ var flo2=$("flo2");//右浮动层，控制运动速度方向
+ setInterval(function(){                             //计时器下遍历所有图片，所有图片都同时运动
+    for(var i=0;i<pics.length;i++){
+     a=(i+1)*36;//循环定位每张图片各自初始化的位置
+     b+=speed;                                                                 //以下是圆周算法用法
+	 pics[i].style.width=Math.ceil(w+50*Math.sin((a+b)*2*Math.PI/360))+"px";
+	 pics[i].style.height=Math.ceil(h+50*Math.sin((a+b)*2*Math.PI/360))+"px";
+	 pics[i].style.zIndex=Math.ceil(z+r/100*Math.sin((a+b)*2*Math.PI/360));
+     pics[i].style.left=Math.ceil(l+r*Math.cos((a+b)*2*Math.PI/360))+"px";
+     pics[i].style.top=Math.ceil(t+r/3*Math.sin((a+b)*2*Math.PI/360))+"px";
+    }
+    
+ },30);
+ flo1.onmouseover=function(){
+     speed=0.05;
+	}
+ flo2.onmouseover=function(){
+     speed=-0.05;
+	}
+
+  
+</script>
+
+</body>
+</html>

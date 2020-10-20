@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        canvas {
+            box-shadow: 4px 4px 14px rgba(0, 0, 0, 0.5)
+        }
+    </style>
+</head>
+<script>
+    window.onload = function () {
+        let canvas = document.querySelector('canvas')
+        let W = canvas.width = 800
+        let H = canvas.height = 600
+        let ctx = canvas.getContext('2d')
+        let clock = new Clock({ x: W / 2, y: H / 2, r: 200 }).render(ctx)
+        setInterval(() => {
+            ctx.clearRect(0, 0, W, H)
+            clock.render(ctx)
+        }, 16)
+    }
+
+    class Clock {
+        constructor(props) {
+            this.x
+            this.y
+            this.r
+            this.fontWeight = 30
+            Object.assign(this, props)
+            return this
+        }
+        drawCirle() {
+            let { x, y, r, ctx } = this
+            this.circle(x, y, r)
+        }
+        drawCenter() {
+            let { x, y } = this
+            this.circle(x, y, 10)
+        }
+        circle(x, y, r) {
+            let { ctx } = this
+            ctx.save()
+            ctx.translate(x, y)
+            ctx.beginPath()
+            ctx.arc(0, 0, r, 0, 2 * Math.PI)
+            ctx.stroke()
+            ctx.closePath()
+            ctx.restore()
+        }
+        drawHands() {
+            let date = new Date()
+            let hours = date.getHours()
+            hours = hours > 12 ? hours - 12 : hours
+            this.drawHand(5 * hours + (date.getMinutes() / 60) * 5, true)
+            this.drawHand(date.getMinutes())
+            this.drawHand(date.getSeconds())
+        }
+        drawHand(loc, isHour) {
+            let { x, y, r, ctx } = this
+            let angle = loc / 60 * Math.PI * 2 - Math.PI / 2
+            let handLength = isHour ? r - 30 - 30 : r - 30
+            ctx.save()
+            ctx.translate(x, y)
+            ctx.beginPath()
+            ctx.moveTo(0, 0)
+            ctx.lineTo(handLength * Math.cos(angle), handLength * Math.sin(angle))
+            ctx.stroke()
+            ctx.closePath()
+            ctx.restore()
+        }
+        drawNumerials() {
+            let { x, y, r, fontWeight, ctx } = this
+            r += 20
+            ctx.font = fontWeight + 'px Arial'
+            let nums = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+            nums.forEach((num, i) => {
+                let textW = ctx.measureText(num).width
+                let angle = 2 * Math.PI / 12 * (num - 3)
+                ctx.save()
+                ctx.translate(x, y)
+                ctx.fillText(num, r * Math.cos(angle) - textW / 2, r * Math.sin(angle) + fontWeight / 3)
+                ctx.restore()
+            })
+        }
+        drawTick() {
+            let { x, y, r, ctx } = this
+            for (let i = 0; i < 60; i++) {
+                let angle = Math.PI / 30*i-Math.PI/2
+                let scaleW=i%5==0?15:5
+                ctx.save()
+                ctx.translate(x,y)
+                ctx.beginPath()
+                ctx.moveTo(r*Math.cos(angle),r*Math.sin(angle))
+                ctx.lineTo((r-scaleW)*Math.cos(angle),(r-scaleW)*Math.sin(angle))
+                ctx.stroke()
+                ctx.closePath()
+                ctx.restore()
+            }
+        }
+        render(ctx) {
+            this.ctx = ctx
+            this.drawCirle()
+            this.drawCenter()
+            this.drawHands()
+            this.drawNumerials()
+            this.drawTick()
+            return this
+        }
+    }
+</script>
+
+<body>
+    <canvas></canvas>
+</body>
+
+</html>
